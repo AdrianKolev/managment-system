@@ -18,7 +18,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::paginate(10);
+        return User::with('role')->paginate(10);
     }
 
     /**
@@ -49,7 +49,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return User::find($id);
+        return User::with('role')->find($id);
     }
 
     /**

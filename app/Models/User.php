@@ -15,4 +15,10 @@ class User extends Authenticatable
     protected $guarded = [];
 
     protected $hidden = ['password'];
+
+    // User has one role
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
 }

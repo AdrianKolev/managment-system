@@ -28,7 +28,9 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('user', [AuthController::class, 'user']);
     Route::post('logout', [AuthController::class, 'logout']);
-
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::put('users/info', [AuthController::class, 'updateInfo']);
+    Route::put('users/password', [AuthController::class, 'updatePassword']);
     // Crud operations for the user. 
     Route::apiResource('users', UserController::class);
 

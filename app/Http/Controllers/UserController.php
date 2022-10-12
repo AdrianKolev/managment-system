@@ -16,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+        return User::paginate(10);
     }
 
     /**
@@ -25,11 +25,15 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserCreateRequest $request)
     {
         $user = User::create(
-            $request->only('first_name','last_name', 'email')
-            + ['password' => Hash::make(1234)]
+            $request->only(
+                'first_name',
+                'last_name',
+                'email'
+            )
+                + ['password' => Hash::make(1234)]
         );
 
         return response($user, Response::HTTP_CREATED);
@@ -53,10 +57,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
         $user = User::find($id);
-        $user->update($request->only('first_name','last_name', 'email'));
+        $user->update($request->only('first_name', 'last_name', 'email'));
 
         return \response($user,  Response::HTTP_CREATED);
     }

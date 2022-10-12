@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
+use App\Http\Requests\UserCreateRequest;
+use App\Http\Requests\UserUpdateInfoRequest;
+use App\Http\Requests\UserUpdatePasswordRequest;
+use App\Http\Requests\UserUpdateRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 use function Ramsey\Uuid\v1;
 
@@ -78,6 +83,11 @@ class AuthController extends Controller
         return $request->user();
     }
 
+    /**
+     * Logout
+     *
+     * @return void
+     */
     public function logout()
     {
         $cookie = Cookie::forget('jwt');
@@ -85,5 +95,38 @@ class AuthController extends Controller
         return \response([
             'message' => 'success'
         ])->withCookie($cookie);
+    }
+
+    
+    /**
+     * Update own user info
+     *
+     * @param UserUpdateInfoRequest $request
+     * @return void
+     */
+    public function updateInfo(UserUpdateInfoRequest $request)
+    {
+        
+        $user = $request->user();
+
+        $user->update($request->only('first_name', 'last_name', 'email'));
+
+        return \response($user, Response::HTTP_ACCEPTED);
+    }
+
+    /**
+     * Update user own password
+     *
+     * @param UserUpdatePasswordRequest $request
+     * @return void
+     */
+    public function updatePassword(UserUpdatePasswordRequest $request)
+    {
+        $user = $request->user();
+        $user->update([
+            'password' => Hash::make($request->input('password'))
+        ]);
+
+        return \response($user, Response::HTTP_CREATED);
     }
 }

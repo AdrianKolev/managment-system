@@ -13,6 +13,7 @@ use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateInfoRequest;
 use App\Http\Requests\UserUpdatePasswordRequest;
 use App\Http\Requests\UserUpdateRequest;
+use App\Http\Resources\UserResource;
 use Symfony\Component\HttpFoundation\Response;
 
 use function Ramsey\Uuid\v1;
@@ -32,9 +33,10 @@ class AuthController extends Controller
             'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
+            'role_id' => 3
         ]);
 
-        return response($user, HttpFoundationResponse::HTTP_CREATED);
+        return response(new UserResource($user), HttpFoundationResponse::HTTP_CREATED);
     }
 
 
@@ -79,8 +81,9 @@ class AuthController extends Controller
      * @return void
      */
     public function user(Request $request)
-    {
-        return $request->user();
+    {   
+        $user = $request->user();
+        return new UserResource($user->load('role'));
     }
 
     /**
@@ -111,7 +114,7 @@ class AuthController extends Controller
 
         $user->update($request->only('first_name', 'last_name', 'email'));
 
-        return \response($user, Response::HTTP_ACCEPTED);
+        return \response(new UserResource($user), Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -127,6 +130,6 @@ class AuthController extends Controller
             'password' => Hash::make($request->input('password'))
         ]);
 
-        return \response($user, Response::HTTP_CREATED);
+        return \response(new UserResource($user), Response::HTTP_CREATED);
     }
 }

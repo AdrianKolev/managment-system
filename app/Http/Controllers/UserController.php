@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
+use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
@@ -18,7 +19,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::with('role')->paginate(10);
+        return UserResource::collection(User::with('role')->paginate(10));
     }
 
     /**
@@ -33,12 +34,14 @@ class UserController extends Controller
             $request->only(
                 'first_name',
                 'last_name',
-                'email'
+                'email',
+                'role_id'
+
             )
                 + ['password' => Hash::make(1234)]
         );
 
-        return response($user, Response::HTTP_CREATED);
+        return response(new UserResource($user), Response::HTTP_CREATED);
     }
 
     /**
@@ -49,7 +52,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return User::with('role')->find($id);
+        return new UserResource(User::with('role')->find($id));
     }
 
     /**
@@ -64,7 +67,7 @@ class UserController extends Controller
         $user = User::find($id);
         $user->update($request->only('first_name', 'last_name', 'email'));
 
-        return \response($user,  Response::HTTP_CREATED);
+        return \response(new UserResource($user),  Response::HTTP_CREATED);
     }
 
     /**

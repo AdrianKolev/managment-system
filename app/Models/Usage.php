@@ -13,4 +13,9 @@ class Usage extends Model
     {
         return $this->hasMany(UsageItem::class);
     }
+
+    public function getNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
 }

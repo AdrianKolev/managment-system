@@ -17,8 +17,7 @@ class UsageResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
+            'name' => $this->name,
             'email' => $this->email,
             'usage_items' => UsageItemResource::collection($this->whenLoaded('usageItems'))
         ];

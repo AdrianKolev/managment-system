@@ -49,5 +49,5 @@ Route::middleware('auth:sanctum')->group(function () {
     // Images
     Route::post('upload', [ImageController::class, 'upload']);
     // Usages
-    Route::apiResource('usage', UsageController::class)->only('index', 'show');
+    Route::apiResource('usages', UsageController::class)->only('index', 'show');
 });

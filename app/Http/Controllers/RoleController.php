@@ -18,7 +18,9 @@ class RoleController extends Controller
     {
         $role = Role::create($request->only('name'));
 
-        return response(new RoleResource($role), Response::HTTP_CREATED);
+        $role->permissions()->attach($request->input('permissions'));
+
+        return response(new RoleResource($role->load('permissions')), Response::HTTP_CREATED);
     }
 
     public function show($id)
@@ -32,7 +34,10 @@ class RoleController extends Controller
 
         $role->update($request->only('name'));
 
-        return response(new RoleResource($role), Response::HTTP_ACCEPTED);
+        // See the currnet permission and update them acordingly to the request
+        $role->permissions()->sync($request->input('permissions'));
+
+        return response(new RoleResource($role->load('permissions')), Response::HTTP_ACCEPTED);
     }
 
     public function destroy($id)

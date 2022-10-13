@@ -1,12 +1,15 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\RoleController;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\RoleController;
+
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ImageController;
+use App\Http\Controllers\UsageController;
+use App\Http\Controllers\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 /**
- * POST
+ * Login/Register
  */
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
@@ -29,6 +32,7 @@ Route::post('login', [AuthController::class, 'login']);
  * Middleware - Check the request and return Unathorized if token is not valid
  */
 Route::middleware('auth:sanctum')->group(function () {
+    // Auth
     Route::get('user', [AuthController::class, 'user']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('logout', [AuthController::class, 'logout']);
@@ -38,6 +42,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
     // Roles
     Route::apiResource('roles', RoleController::class);
+    // Items 
+    Route::apiResource('items', ItemController::class);
     // Permissions
     Route::get('permissions', [PermissionController::class, 'index']);
+    // Images
+    Route::post('upload', [ImageController::class, 'upload']);
+    // Usages
+    Route::apiResource('usage', UsageController::class)->only('index', 'show');
 });

@@ -50,4 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('upload', [ImageController::class, 'upload']);
     // Usages
     Route::apiResource('usages', UsageController::class)->only('index', 'show');
+    Route::post('export', [UsageController::class, 'export']);
+    Route::get('chart', [UsageController::class, 'chart']);
+
 });
